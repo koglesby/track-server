@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const authRoutes = require("./routes/authRoutes");
 const bodyParser = require("body-parser");
 require("dotenv").config();
+const requireAuth = require("./middlewares/requireAuth");
 
 const app = express();
 
@@ -25,8 +26,8 @@ mongoose.connection.on("error", () => {
   console.error("error connecting to mongo");
 });
 
-app.get("/", (req, res) => {
-  res.send("get request sent!");
+app.get("/", requireAuth, (req, res) => {
+  res.send(`signed in as ${req.user.email}`);
 });
 
 app.listen(3000, () => {
